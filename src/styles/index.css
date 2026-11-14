@@ -1,5 +1,151 @@
-@import 'tailwindcss' source(none);
-@source '../../**/*.{js,ts,jsx,tsx}';
-@import 'tw-animate-css';
-@import './default_theme.css';
-@import './globals.css';
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens: the only place colours, type and spacing are defined.
+   Tailwind utilities (bg-paper, text-ink, border-line …) map to these.
+------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-paper: #f7f6f2;      /* page background */
+  --color-surface: #ffffff;    /* raised surfaces */
+  --color-stage: #eceae4;      /* neutral stage behind screenshots */
+  --color-ink: #141414;        /* headings, primary text */
+  --color-ink-2: #3d3d42;      /* body text */
+  --color-muted: #66666c;      /* secondary text, 5.2:1 on paper */
+  --color-line: #e2e0da;       /* hairlines */
+  --color-line-strong: #cfccc4;
+  --color-accent: #2f44c9;     /* single restrained accent, 6.9:1 on paper */
+  --color-accent-ink: #2335a8;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --container: 1240px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --header-h: 4.25rem;
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink-2);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    color: var(--color-ink);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  img { display: block; max-width: 100%; height: auto; }
+  ::selection { background: color-mix(in srgb, var(--color-accent) 18%, transparent); color: var(--color-ink); }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .section-y { padding-block: clamp(4.5rem, 9vw, 8rem); }
+
+  /* Type scale */
+  .t-display {
+    font-size: clamp(2.5rem, 1.35rem + 4.6vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+  }
+  .t-h2 {
+    font-size: clamp(2rem, 1.35rem + 2.4vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+  }
+  .t-h3 { font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem); line-height: 1.2; letter-spacing: -0.02em; }
+  .t-lead { font-size: clamp(1.125rem, 1.04rem + 0.4vw, 1.3125rem); line-height: 1.55; color: var(--color-ink-2); }
+  .t-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.875rem;
+    padding: 0 1.25rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s var(--ease-out-soft);
+    cursor: pointer;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--color-ink); color: var(--color-paper); }
+  .btn-primary:hover { background: var(--color-accent); }
+  .btn-ghost { border: 1px solid var(--color-line-strong); color: var(--color-ink); background: transparent; }
+  .btn-ghost:hover { border-color: var(--color-ink); }
+  .btn .arrow { transition: transform 0.25s var(--ease-out-soft); }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* Text link with animated underline */
+  .link {
+    color: var(--color-ink);
+    font-weight: 600;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: color 0.2s, background-size 0.3s var(--ease-out-soft);
+  }
+  .link:hover { color: var(--color-accent); }
+
+  /* Browser-style frame for product screenshots */
+  .frame {
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--color-surface);
+    box-shadow:
+      0 0 0 1px rgb(20 20 20 / 0.06),
+      0 1px 2px rgb(20 20 20 / 0.04),
+      0 12px 32px -12px rgb(20 20 20 / 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -1,49 +1,73 @@
-import { defineConfig } from 'vite'
-import path from 'path'
-import tailwindcss from '@tailwindcss/vite'
-import react from '@vitejs/plugin-react'
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig, type Plugin } from "vite";
+import { site } from "./src/content/site";
+import { absolute, allPages, homeMeta, metaTagsHtml } from "./src/lib/pageMeta";
 
+const META_BLOCK = /<!--meta:start-->[\s\S]*?<!--meta:end-->/;
+const block = (html: string) => `<!--meta:start-->\n    ${html}\n    <!--meta:end-->`;
 
-function figmaAssetResolver() {
+/**
+ * Static SEO output without a framework:
+ * - injects home metadata into index.html
+ * - writes dist/work/<slug>/index.html with page-specific title, description and Open Graph tags,
+ *   so shared links preview correctly and refreshes work on any static host
+ * - writes 404.html (SPA fallback), robots.txt and sitemap.xml
+ */
+function seoPages(): Plugin {
+  let outDir = "dist";
   return {
-    name: 'figma-asset-resolver',
-    resolveId(id) {
-      if (id.startsWith('figma:asset/')) {
-        const filename = id.replace('figma:asset/', '')
-        return path.resolve(__dirname, 'src/assets', filename)
-      }
+    name: "portfolio-seo-pages",
+    configResolved(c) {
+      outDir = path.resolve(c.root, c.build.outDir);
     },
-  }
-}
+    transformIndexHtml(html) {
+      return html.replace(META_BLOCK, block(metaTagsHtml(homeMeta)));
+    },
+    closeBundle() {
+      const indexPath = path.join(outDir, "index.html");
+      let index: string;
+      try {
+        index = readFileSync(indexPath, "utf8");
+      } catch {
+        return; // not a client build
+      }
 
-function versionedPackageResolver() {
-  return {
-    name: 'versioned-package-resolver',
-    enforce: 'pre' as const,
-    async resolveId(id: string, importer: string | undefined) {
-      // Some generated imports include versions, e.g. "pkg@1.2.3".
-      // Strip the version suffix so normal node resolution can work.
-      const match = id.match(/^(@[^/]+\/[^@]+|[^@/]+)@\d.+$/)
-      if (!match) {
-        return null
+      for (const page of allPages) {
+        if (page.path === "/") continue;
+        const html = index.replace(META_BLOCK, block(metaTagsHtml(page)));
+        const dir = path.join(outDir, page.path);
+        mkdirSync(dir, { recursive: true });
+        // Both forms, so /work/<slug> and /work/<slug>/ resolve on any static host.
+        writeFileSync(path.join(dir, "index.html"), html);
+        writeFileSync(`${dir}.html`, html);
       }
-      return this.resolve(match[1], importer, { skipSelf: true })
+
+      writeFileSync(
+        path.join(outDir, "404.html"),
+        index.replace(META_BLOCK, block(`<title>Page not found · ${site.name}</title>\n    <meta name="robots" content="noindex" />`)),
+      );
+
+      const robots = ["User-agent: *", "Allow: /"];
+      if (site.siteUrl) {
+        const urls = allPages
+          .map((p) => `  <url><loc>${absolute(p.path)}</loc><changefreq>monthly</changefreq></url>`)
+          .join("\n");
+        writeFileSync(
+          path.join(outDir, "sitemap.xml"),
+          `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+        );
+        robots.push(`Sitemap: ${absolute("/sitemap.xml")}`);
+      } else {
+        this.warn("site.siteUrl is empty, so sitemap.xml, canonical URLs and absolute og:image URLs were skipped. Set it in src/content/site.ts before deploying.");
+      }
+      writeFileSync(path.join(outDir, "robots.txt"), robots.join("\n") + "\n");
     },
-  }
+  };
 }
 
 export default defineConfig({
-  plugins: [
-    figmaAssetResolver(),
-    versionedPackageResolver(),
-    // The React and Tailwind plugins are both required for Make, even if
-    // Tailwind is not being actively used – do not remove them
-    react(),
-    tailwindcss(),
-  ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src/app'),
-    },
-  },
-})
+  plugins: [react(), tailwindcss(), seoPages()],
+});
