@@ -1,24 +1,17 @@
 import { m, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
+import { Annotated } from "../components/Annotated";
 import { ArrowLeft, ArrowRight, Expand } from "../components/Icons";
 import { Img } from "../components/Img";
 import { Lightbox, type LightboxItem } from "../components/Lightbox";
 import { easeOut, Reveal } from "../components/Reveal";
-import { caseStudies, getCaseStudy, type CaseStudy as Study, type Shot } from "../content/projects";
+import { Unconfirmed } from "../components/Unconfirmed";
+import { caseStudies, getCaseStudy, isShown, type CaseStudy as Study, type Shot } from "../content/projects";
 import { site } from "../content/site";
 import { caseStudyMeta } from "../lib/pageMeta";
 import { useMeta } from "../lib/useMeta";
 import { NotFound } from "./NotFound";
-
-const SECTIONS = [
-  { id: "overview", label: "Overview" },
-  { id: "problem", label: "Problem" },
-  { id: "role", label: "My role" },
-  { id: "decisions", label: "Key decisions" },
-  { id: "goal", label: "Goal" },
-] as const;
-const SECTION_IDS = SECTIONS.map((s) => s.id);
 
 export function CaseStudy() {
   const { slug } = useParams();
@@ -32,7 +25,17 @@ function CaseStudyView({ study }: { study: Study }) {
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 40, restDelta: 0.001 });
-  const active = useScrollSpy(SECTION_IDS);
+
+  const sections = useMemo(
+    () => [
+      { id: "glance", label: "At a glance" },
+      ...study.decisions.map((d, i) => ({ id: `decision-${i + 1}`, label: d.title })),
+      { id: "goal", label: "Goal" },
+    ],
+    [study],
+  );
+  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections]);
+  const active = useScrollSpy(sectionIds);
 
   const shots = useMemo(() => {
     const list: Shot[] = [study.cover];
@@ -45,6 +48,12 @@ function CaseStudyView({ study }: { study: Study }) {
 
   const idx = caseStudies.findIndex((c) => c.slug === study.slug);
   const next = caseStudies[(idx + 1) % caseStudies.length];
+  const facts: { k: string; v: string; flagged: boolean }[] = [
+    ...(isShown(study, "role") ? [{ k: "Role", v: study.role, flagged: study.unconfirmed.includes("role") }] : []),
+    ...(isShown(study, "timeline") ? [{ k: "Timeline", v: study.timeline, flagged: study.unconfirmed.includes("timeline") }] : []),
+    { k: "Platform", v: study.platform, flagged: false },
+    { k: "Domain", v: study.category, flagged: false },
+  ];
 
   return (
     <article aria-labelledby="cs-title">
@@ -55,7 +64,7 @@ function CaseStudyView({ study }: { study: Study }) {
       />
 
       {/* Header */}
-      <header className="container-x pt-[calc(var(--header-h)+clamp(2.5rem,6vw,5rem))]">
+      <header className="container-x pt-[calc(var(--header-h)+clamp(2.5rem,6vw,4.5rem))]">
         <Link to={{ pathname: "/", hash: "#work" }} className="group inline-flex items-center gap-2 text-[0.9375rem] font-medium text-muted hover:text-ink">
           <ArrowLeft className="transition-transform group-hover:-translate-x-0.5" />
           All work
@@ -66,9 +75,7 @@ function CaseStudyView({ study }: { study: Study }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: easeOut }}
         >
-          <p className="t-eyebrow mt-10">
-            Case study
-          </p>
+          <p className="t-eyebrow mt-10">Case study</p>
           <h1 id="cs-title" className="t-display mt-4 max-w-[14ch]">
             {study.title}
           </h1>
@@ -76,15 +83,13 @@ function CaseStudyView({ study }: { study: Study }) {
         </m.div>
 
         <dl className="mt-12 grid grid-cols-2 border-t border-line md:grid-cols-4">
-          {[
-            ["Role", study.role],
-            ["Timeline", study.timeline],
-            ["Platform", study.platform],
-            ["Domain", study.category],
-          ].map(([k, v]) => (
+          {facts.map(({ k, v, flagged }) => (
             <div key={k} className="border-b border-line py-4 pr-4 md:border-b-0">
               <dt className="text-sm text-muted">{k}</dt>
-              <dd className="mt-1 font-medium text-ink">{v}</dd>
+              <dd className="mt-1 font-medium text-ink">
+                {v}
+                {flagged ? <Unconfirmed /> : null}
+              </dd>
             </div>
           ))}
         </dl>
@@ -99,20 +104,30 @@ function CaseStudyView({ study }: { study: Study }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: easeOut, delay: 0.15 }}
         >
-          <ShotButton shot={study.cover} onOpen={openShot} eager sizes="(min-width: 1240px) 1100px, 90vw" className="rounded-b-none" />
+          <button
+            type="button"
+            onClick={() => openShot(study.cover)}
+            className="frame group relative block w-full cursor-zoom-in rounded-b-none"
+            aria-label={`View full size: ${study.cover.alt}`}
+          >
+            <Img shot={study.cover} eager sizes="(min-width: 1240px) 1100px, 90vw" />
+            <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-ink/80 text-paper opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              <Expand width={16} height={16} />
+            </span>
+          </button>
         </m.div>
       </div>
 
       {/* Body */}
-      <div className="container-x section-y grid gap-12 lg:grid-cols-[200px_1fr] lg:gap-16">
+      <div className="container-x section-y grid gap-12 lg:grid-cols-[220px_1fr] lg:gap-16">
         <nav aria-label="On this page" className="hidden lg:block">
-          <ol className="sticky top-[calc(var(--header-h)+2rem)] space-y-1 border-l border-line">
-            {SECTIONS.map((s) => (
+          <ol className="sticky top-[calc(var(--header-h)+2rem)] space-y-0.5 border-l border-line">
+            {sections.map((s) => (
               <li key={s.id}>
                 <a
                   href={`#${s.id}`}
                   aria-current={active === s.id ? "location" : undefined}
-                  className={`-ml-px block border-l py-1.5 pl-4 text-[0.9375rem] transition-colors ${
+                  className={`-ml-px block border-l py-1.5 pl-4 text-[0.875rem] leading-snug transition-colors ${
                     active === s.id ? "border-ink font-medium text-ink" : "border-transparent text-muted hover:text-ink"
                   }`}
                 >
@@ -124,56 +139,49 @@ function CaseStudyView({ study }: { study: Study }) {
         </nav>
 
         <div className="min-w-0 max-w-[880px]">
-          <Block id="overview" label="Overview">
-            <p className="t-lead">{study.context}</p>
-          </Block>
+          {/* At a glance: the whole story in a few seconds */}
+          <section id="glance" aria-labelledby="glance-title" className="scroll-mt-28">
+            <h2 id="glance-title" className="t-eyebrow">
+              At a glance
+            </h2>
+            <div className="mt-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-2">
+              <GlanceCell title="Context">{study.context}</GlanceCell>
+              <GlanceCell title="Problem">{study.problem}</GlanceCell>
+              <GlanceCell title="What I designed" wide>
+                <ul className="grid gap-x-8 gap-y-2 sm:grid-cols-2">
+                  {study.contribution.map((c) => (
+                    <li key={c} className="flex gap-3">
+                      <span aria-hidden className="mt-[0.7em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </GlanceCell>
+            </div>
+          </section>
 
-          <Block id="problem" label="Problem">
-            <p className="t-lead">{study.problem}</p>
-          </Block>
-
-          <Block id="role" label="My role">
-            <p>
-              <span className="font-semibold text-ink">{study.role}</span> · {study.timeline}
-            </p>
-            <ul className="mt-5 grid gap-x-8 sm:grid-cols-2">
-              {study.contribution.map((c) => (
-                <li key={c} className="flex gap-3 border-t border-line py-3">
-                  <span aria-hidden className="mt-[0.7em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </Block>
-
-          <section id="decisions" aria-labelledby="decisions-title" className="scroll-mt-28 border-t border-line pt-10 pb-6">
+          {/* Decisions */}
+          <section aria-labelledby="decisions-title" className="mt-20">
             <h2 id="decisions-title" className="t-eyebrow">
               Key decisions
             </h2>
-            <ol className="mt-8 space-y-16 md:space-y-20">
+            <ol className="mt-8 space-y-20 md:space-y-24">
               {study.decisions.map((d, i) => (
-                <li key={d.title}>
+                <li key={d.title} id={`decision-${i + 1}`} className="scroll-mt-28">
                   <Reveal>
-                    <div className="grid gap-3 md:grid-cols-[3rem_1fr]">
-                      <span className="text-sm font-medium tabular-nums text-muted md:pt-2">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div>
-                        <h3 className="t-h3">{d.title}</h3>
-                        <p className="mt-3 max-w-[64ch]">{d.body}</p>
-                      </div>
-                    </div>
+                    <h3 className="t-h3 max-w-[30ch]">{d.title}</h3>
+                    <p className="mt-3 max-w-[66ch]">{d.body}</p>
                   </Reveal>
-                  {d.shot && d.shot.src !== study.cover.src ? (
-                    <Reveal className="mt-8" y={28}>
-                      <div className="rounded-xl" style={{ backgroundColor: study.stage, padding: "5%" }}>
-                        <ShotButton
-                          shot={d.shot}
-                          onOpen={openShot}
-                          sizes="(min-width: 1024px) 760px, 90vw"
-                          narrow={d.shot.height / d.shot.width > 1.3}
-                        />
-                      </div>
+                  {d.shot ? (
+                    <Reveal className="mt-8" y={24}>
+                      <Annotated
+                        id={`${study.slug}-d${i + 1}`}
+                        shot={d.shot}
+                        markers={d.markers}
+                        stage={study.stage}
+                        sizes="(min-width: 1024px) 880px, 92vw"
+                        onOpen={openShot}
+                      />
                     </Reveal>
                   ) : null}
                 </li>
@@ -181,18 +189,23 @@ function CaseStudyView({ study }: { study: Study }) {
             </ol>
           </section>
 
-          <Block id="goal" label="Design goal">
-            <p className="text-[clamp(1.375rem,1.1rem+1.2vw,2rem)] font-medium leading-snug tracking-[-0.02em] text-ink">
-              {study.goal}
-            </p>
-            <p className="mt-6 text-muted">
-              Want the full story behind this project? I’m happy to walk through it.{" "}
-              <a className="link" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`About ${study.title}`)}`}>
-                Email me
-              </a>
-              .
-            </p>
-          </Block>
+          <section id="goal" aria-labelledby="goal-title" className="mt-20 scroll-mt-28 border-t border-line pt-10">
+            <Reveal>
+              <h2 id="goal-title" className="t-eyebrow mb-5">
+                Design goal
+              </h2>
+              <p className="text-[clamp(1.375rem,1.1rem+1.2vw,2rem)] font-medium leading-snug tracking-[-0.02em] text-ink">
+                {study.goal}
+              </p>
+              <p className="mt-6 text-muted">
+                Want the full story behind this project? I’m happy to walk through it.{" "}
+                <a className="link" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`About ${study.title}`)}`}>
+                  Email me
+                </a>
+                .
+              </p>
+            </Reveal>
+          </section>
         </div>
       </div>
 
@@ -207,10 +220,7 @@ function CaseStudyView({ study }: { study: Study }) {
               Read case study <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
             </span>
           </div>
-          <div
-            className="relative aspect-[16/9] overflow-hidden rounded-xl md:col-span-6"
-            style={{ backgroundColor: next.stage }}
-          >
+          <div className="relative aspect-[16/9] overflow-hidden rounded-xl md:col-span-6" style={{ backgroundColor: next.stage }}>
             <div className="frame absolute left-[8%] top-[12%] w-[105%] transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:-translate-y-2">
               <Img shot={next.cover} sizes="(min-width: 768px) 50vw, 90vw" decorative />
             </div>
@@ -223,52 +233,16 @@ function CaseStudyView({ study }: { study: Study }) {
   );
 }
 
-function Block({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
+function GlanceCell({ title, children, wide }: { title: string; children: React.ReactNode; wide?: boolean }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-28 border-t border-line pt-10 pb-14 first:border-t-0 first:pt-0">
-      <Reveal>
-        <h2 id={`${id}-title`} className="t-eyebrow mb-5">
-          {label}
-        </h2>
-        {children}
-      </Reveal>
-    </section>
+    <div className={`bg-surface p-6 md:p-7 ${wide ? "md:col-span-2" : ""}`}>
+      <h3 className="text-sm font-semibold text-ink">{title}</h3>
+      <div className="mt-2.5 text-[1rem] leading-relaxed">{children}</div>
+    </div>
   );
 }
 
-function ShotButton({
-  shot,
-  onOpen,
-  sizes,
-  eager,
-  narrow,
-  className = "",
-}: {
-  shot: Shot;
-  onOpen: (s: Shot) => void;
-  sizes: string;
-  eager?: boolean;
-  narrow?: boolean;
-  className?: string;
-}) {
-  return (
-    <figure className={narrow ? "mx-auto max-w-[460px]" : ""}>
-      <button
-        type="button"
-        onClick={() => onOpen(shot)}
-        className={`frame group relative block w-full cursor-zoom-in text-left ${className}`}
-        aria-label={`View full size: ${shot.alt}`}
-      >
-        <Img shot={shot} sizes={sizes} eager={eager} />
-        <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-ink/80 text-paper opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-          <Expand width={16} height={16} />
-        </span>
-      </button>
-    </figure>
-  );
-}
-
-function useScrollSpy(ids: readonly string[]) {
+function useScrollSpy(ids: string[]) {
   const [active, setActive] = useState<string>(ids[0]);
   useEffect(() => {
     const io = new IntersectionObserver(

@@ -27,35 +27,40 @@ export const site = {
   },
 
   hero: {
-    headline: "I design clear, usable products for complex SaaS and fintech workflows.",
+    /** Words wrapped in ** are emphasised. */
+    headline: "I design **clear, usable** products for complex SaaS and fintech workflows.",
     intro:
-      "Senior UI/UX designer with 10+ years of experience across B2B SaaS, fintech and healthcare. I turn data-heavy work in payments, financial reporting, payroll and hiring into interfaces people understand at a glance.",
+      "Senior UI/UX designer with **10+ years** of experience across **B2B SaaS, fintech and healthcare**. I turn data-heavy work in payments, financial reporting, payroll and hiring into interfaces people understand at a glance.",
+    current: "Lead UI/UX Designer at **Satva Solutions**",
     /** Short, factual proof points from the CV. */
     proof: [
-      { label: "Experience", value: "10+ years in UI/UX and product design" },
-      { label: "Currently", value: "Lead UI/UX Designer, Satva Solutions" },
-      { label: "Delivered", value: "25+ client engagements across B2B SaaS, fintech and healthcare" },
-      { label: "Built", value: "A design system of 120+ reusable components" },
+      { value: "10+", label: "years in UI/UX and product design" },
+      { value: "25+", label: "client engagements across SaaS, fintech and healthcare" },
+      { value: "120+", label: "components in the design system I built" },
     ],
   },
 
   about: {
     paragraphs: [
-      "I’m Lead UI/UX Designer at Satva Solutions, where I built and lead the design function. My path runs from graphic and brand design into product design, and today I focus on B2B products where clarity under pressure matters: finance dashboards, payment setup, payroll and time tracking, and career tools.",
-      "I own the design lifecycle end to end: research, information architecture, prototyping, a shared design system and design-to-code handoff. I mentor designers, run design reviews, and partner with product and engineering leadership on roadmaps and design sprints. AI-assisted workflows (Figma AI, Cursor, ChatGPT) help me move faster from idea to prototype to handoff.",
+      "I’m Lead UI/UX Designer at Satva Solutions, where I **built and lead the design function**. I started in graphic and brand design and moved into product design, focusing on B2B products where clarity under pressure matters.",
+      "I own the lifecycle end to end: **research, information architecture, prototyping, a shared design system and design-to-code handoff**.",
     ],
-    principles: [
+    leadership: [
       {
-        title: "Evidence over assumption",
-        body: "Decisions are grounded in research and testing, not personal preference or the loudest voice in the room.",
+        title: "Built the design function",
+        body: "Set up and scaled design at Satva Solutions, with design-ops rituals and standardised design reviews.",
       },
       {
-        title: "Clarity at every scale",
-        body: "Information architecture, content and interaction patterns that reduce cognitive load, especially in dense, multi-role products.",
+        title: "120+ component design system",
+        body: "A shared library of reusable components that cut design-to-development handoff cycles by **30%**.",
       },
       {
-        title: "Systems that scale",
-        body: "Reusable components and shared standards keep quality consistent across products and make handoff to engineering faster.",
+        title: "Mentoring designers",
+        body: "Mentor designers and raise the quality and consistency of the team’s output through reviews.",
+      },
+      {
+        title: "Design-to-development partnership",
+        body: "Work with product and engineering leadership on roadmaps and design sprints, through to handoff.",
       },
     ],
   },
@@ -64,19 +69,19 @@ export const site = {
     capabilities: [
       {
         title: "Product & UX design",
-        items: ["User research", "Information architecture", "Interaction design", "Wireframing & prototyping", "User & A/B testing", "Journey mapping"],
+        items: ["User research", "Information architecture", "Interaction design", "Wireframing & prototyping"],
       },
       {
         title: "Data-dense interfaces",
-        items: ["SaaS dashboards", "Editable data tables", "Multi-step workflows", "Onboarding flows", "Admin consoles"],
+        items: ["SaaS dashboards", "Editable data tables", "Multi-step workflows", "Onboarding flows"],
       },
       {
         title: "Design systems",
-        items: ["Component libraries", "Design tokens", "Accessibility (WCAG)", "Responsive design", "Design-to-code handoff"],
+        items: ["Component libraries", "Design tokens", "Accessibility (WCAG)", "Design-to-code handoff"],
       },
       {
         title: "Leadership & process",
-        items: ["Design team leadership", "Mentoring", "Design ops & reviews", "Workshop facilitation", "Roadmapping & design sprints"],
+        items: ["Design team leadership", "Mentoring", "Design ops & reviews", "Roadmapping & design sprints"],
       },
     ],
     domains: [
@@ -89,7 +94,16 @@ export const site = {
       "Career & HR tech",
     ],
     tools: ["Figma", "Adobe XD", "Photoshop", "Illustrator", "HTML/CSS"],
-    ai: ["Figma AI", "Cursor", "ChatGPT", "Claude", "v0 by Vercel"],
+    ai: {
+      summary: "AI-assisted workflows that speed up ideation, prototyping and design-to-code handoff.",
+      /** Logos from LobeHub Icons (MIT), stored in /public/brand. */
+      tools: [
+        { name: "Claude", logo: "/brand/claude.svg" },
+        { name: "Cursor", logo: "/brand/cursor.svg" },
+        { name: "Codex", logo: "/brand/codex.svg" },
+        { name: "Adobe Firefly", logo: "/brand/adobe-firefly.svg" },
+      ],
+    },
   },
 
   experience: [
@@ -98,10 +112,10 @@ export const site = {
       role: "Lead UI/UX Designer",
       org: "Satva Solutions",
       highlights: [
-        "Led end-to-end UI/UX for 25+ client engagements across B2B SaaS, fintech and healthcare; research-led redesigns of activation flows reduced time-to-value by 40%.",
-        "Built and scaled the design function: mentored designers, introduced design-ops rituals and standardised design reviews.",
-        "Established a design system of 120+ reusable components, cutting design-to-development handoff cycles by 30%.",
-        "Partnered with product and engineering leadership on roadmaps and design sprints, and introduced AI-assisted design workflows.",
+        "Led end-to-end UI/UX for **25+ client engagements** across B2B SaaS, fintech and healthcare; research-led redesigns of activation flows reduced time-to-value by **40%**.",
+        "**Built and scaled the design function**: mentored designers, introduced design-ops rituals and standardised design reviews.",
+        "Established a design system of **120+ reusable components**, cutting design-to-development handoff cycles by **30%**.",
+        "Partnered with product and engineering leadership on roadmaps and design sprints, and introduced AI-assisted design workflows (Claude, Cursor, Codex, Adobe Firefly).",
       ],
     },
     {
@@ -109,9 +123,9 @@ export const site = {
       role: "Senior UI/UX & Graphic Designer",
       org: "Datatech Computers Pvt Ltd",
       highlights: [
-        "Designed 18+ product modules for enterprise software suites, improving task completion rates by 22% through usability testing and iterative wireframing.",
+        "Designed **18+ product modules** for enterprise software suites, improving task completion rates by **22%** through usability testing and iterative wireframing.",
         "Worked with developers to turn high-fidelity mockups into responsive interfaces, and set up visual design guidelines and asset libraries.",
-        "Led 40+ marketing and brand campaigns across digital and print.",
+        "Led **40+ marketing and brand campaigns** across digital and print.",
       ],
     },
     {
@@ -119,7 +133,7 @@ export const site = {
       role: "Junior Graphic Designer",
       org: "Zebra Idealab Pvt Ltd",
       highlights: [
-        "Produced visual assets, UI mockups and brand creatives for 12+ client accounts across 30+ deliverables.",
+        "Produced visual assets, UI mockups and brand creatives for **12+ client accounts** across 30+ deliverables.",
       ],
     },
   ],

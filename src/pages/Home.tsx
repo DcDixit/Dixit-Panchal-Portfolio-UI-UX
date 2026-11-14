@@ -1,11 +1,13 @@
-import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef, useState } from "react";
+import { m, useReducedMotion } from "motion/react";
+import { useState } from "react";
 import { Link } from "react-router";
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Copy, Download, Expand } from "../components/Icons";
 import { Img } from "../components/Img";
 import { Lightbox, type LightboxItem } from "../components/Lightbox";
 import { easeOut, Reveal } from "../components/Reveal";
-import { caseStudies, moreProjects, type CaseStudy } from "../content/projects";
+import { Rich } from "../components/Rich";
+import { Unconfirmed } from "../components/Unconfirmed";
+import { caseStudies, isShown, moreProjects, type CaseStudy } from "../content/projects";
 import { site } from "../content/site";
 import { homeMeta } from "../lib/pageMeta";
 import { useMeta } from "../lib/useMeta";
@@ -29,105 +31,107 @@ export function Home() {
 
 function Hero() {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 24]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 56]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 90]);
-  const words = site.hero.headline.split(" ");
-
-  const [a, b, c] = [caseStudies[1], caseStudies[2], caseStudies[3]];
+  const front = caseStudies.find((c) => c.slug === "gocardless-quickbooks")!;
+  const back = caseStudies.find((c) => c.slug === "costallocation-pro")!;
 
   return (
-    <section ref={ref} aria-labelledby="hero-title" className="overflow-hidden pt-[calc(var(--header-h)+clamp(3rem,8vw,6.5rem))]">
-      <div className="container-x">
-        <h1 id="hero-title">
-          <m.span
-            className="mb-6 block text-base font-medium tracking-normal text-muted md:mb-8 md:text-lg"
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            {site.name} · {site.role}
-          </m.span>
-          <span className="t-display block max-w-[19ch]">
-            {words.map((w, i) => (
-              <span key={i} className="inline-block overflow-hidden pb-[0.08em] align-top">
-                <m.span
-                  className="inline-block"
-                  initial={reduce ? false : { y: "105%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.9, ease: easeOut, delay: 0.1 + i * 0.035 }}
-                >
-                  {w}
-                  {i < words.length - 1 ? " " : ""}
-                </m.span>
-              </span>
-            ))}
-          </span>
-        </h1>
-
-        <Reveal delay={0.35} className="mt-8 grid gap-10 md:mt-10 lg:grid-cols-12 lg:items-end">
-          <p className="t-lead max-w-[56ch] lg:col-span-7">{site.hero.intro}</p>
-          <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
-            <Link to={{ hash: "#work" }} className="btn btn-primary">
-              View selected work
-              <ArrowDown className="arrow" />
-            </Link>
-            {site.contact.resumeUrl ? (
-              <a href={site.contact.resumeUrl} className="btn btn-ghost" download>
-                <Download />
-                Download CV
-              </a>
-            ) : (
-              <a href={`mailto:${site.contact.email}`} className="btn btn-ghost">
-                Get in touch
-              </a>
-            )}
+    <section aria-labelledby="hero-title" className="pt-[calc(var(--header-h)+clamp(1.75rem,4vw,3.25rem))]">
+      {/* Title and subtitle */}
+      <m.div
+        className="container-x"
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: easeOut }}
+      >
+        <p className="flex items-center gap-2 text-[0.9375rem] font-medium text-muted">
+          <span aria-hidden className="h-2 w-2 rounded-full bg-[#2f9e5b]" />
+          {site.location} · {site.availability}
+        </p>
+        <div className="mt-5 grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-12">
+          <h1 id="hero-title" className="lg:col-span-7">
+            <span className="sr-only">
+              {site.name}, {site.role}.{" "}
+            </span>
+            <span className="block text-[clamp(2.25rem,1.2rem+2.9vw,4rem)] font-semibold leading-[1.04] tracking-[-0.04em]">
+              <Rich text={site.hero.headline} emClassName="font-semibold text-accent" />
+            </span>
+          </h1>
+          <div className="lg:col-span-5">
+            <p className="text-[1.0625rem] leading-relaxed text-ink-2 md:text-lg">
+              <Rich text={site.hero.intro} />
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to={{ hash: "#work" }} className="btn btn-primary">
+                View selected work
+                <ArrowDown className="arrow" />
+              </Link>
+              {site.contact.resumeUrl ? (
+                <a href={site.contact.resumeUrl} className="btn btn-ghost" download>
+                  <Download />
+                  Download CV
+                </a>
+              ) : null}
+            </div>
           </div>
-        </Reveal>
+        </div>
+      </m.div>
 
-        <Reveal delay={0.45}>
-          <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-2 md:mt-16 lg:grid-cols-4">
-            {site.hero.proof.map(({ label, value }) => (
-              <div key={label} className="border-b border-line py-4 sm:pr-6 lg:border-b-0">
-                <dt className="text-sm text-muted">{label}</dt>
-                <dd className="mt-1 font-medium leading-snug text-ink">{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
-      </div>
+      {/* Real product work, full container width; each screen opens its case study */}
+      <m.div
+        className="container-x mt-10 md:mt-12"
+        initial={reduce ? false : { opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: easeOut, delay: 0.15 }}
+      >
+        <div
+          className="relative aspect-[4/3] overflow-hidden rounded-2xl sm:aspect-[16/9] lg:aspect-auto lg:h-[min(46vw,560px)]"
+          style={{ backgroundColor: front.stage }}
+        >
+          <Link
+            to={`/work/${back.slug}`}
+            aria-label={`${back.title} case study`}
+            className="frame absolute right-[4%] top-[9%] hidden w-[50%] transition-transform duration-500 ease-[var(--ease-out-soft)] hover:-translate-y-1 sm:block"
+          >
+            <Img shot={back.cover} sizes="(min-width: 1024px) 620px, 50vw" decorative />
+          </Link>
+          <Link
+            to={`/work/${front.slug}`}
+            aria-label={`${front.title} case study`}
+            className="frame absolute left-[6%] top-[16%] w-[88%] transition-transform duration-500 ease-[var(--ease-out-soft)] hover:-translate-y-1 sm:w-[56%]"
+          >
+            <Img shot={front.cover} sizes="(min-width: 1024px) 700px, 90vw" eager decorative />
+          </Link>
+        </div>
+        <p className="mt-3 text-sm text-muted">
+          Real product work:{" "}
+          <Link to={`/work/${front.slug}`} className="link font-medium">
+            {front.title}
+          </Link>{" "}
+          and{" "}
+          <Link to={`/work/${back.slug}`} className="link font-medium">
+            {back.title}
+          </Link>
+        </p>
+      </m.div>
 
-      {/* Real product screens; each opens its case study */}
-      <div className="container-x mt-12 md:mt-16" aria-label="Product screens from selected work">
-        <div className="relative overflow-hidden rounded-2xl bg-stage px-5 pt-8 sm:px-10 sm:pt-12 lg:h-[min(44vw,600px)] lg:px-0 lg:pt-0">
-          <m.div style={{ y: y1 }} className="relative z-10 lg:absolute lg:left-[4%] lg:top-[10%] lg:w-[52%]">
-            <HeroShot study={a} sizes="(min-width: 1024px) 640px, 92vw" eager />
-          </m.div>
-          <m.div style={{ y: y2 }} className="relative z-20 hidden lg:absolute lg:left-[36%] lg:top-[30%] lg:block lg:w-[38%]">
-            <HeroShot study={b} sizes="480px" />
-          </m.div>
-          <m.div style={{ y: y3 }} className="relative z-30 hidden lg:absolute lg:right-[3%] lg:top-[44%] lg:block lg:w-[44%]">
-            <HeroShot study={c} sizes="500px" />
-          </m.div>
+      {/* Proof points */}
+      <div className="container-x mt-10 md:mt-14">
+        <div className="grid gap-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <p className="text-sm text-muted">Currently</p>
+            <p className="mt-2 text-lg font-medium leading-snug text-ink">
+              <Rich text={site.hero.current} emClassName="font-semibold" />
+            </p>
+          </div>
+          {site.hero.proof.map(({ value, label }) => (
+            <div key={value}>
+              <p className="text-[clamp(2rem,1.5rem+1.4vw,2.75rem)] font-semibold leading-none tracking-[-0.03em] text-ink">{value}</p>
+              <p className="mt-2 text-sm leading-snug text-muted">{label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function HeroShot({ study, sizes, eager }: { study: CaseStudy; sizes: string; eager?: boolean }) {
-  return (
-    <Link
-      to={`/work/${study.slug}`}
-      className="group block"
-      aria-label={`${study.title} case study`}
-    >
-      <div className="frame transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:-translate-y-1.5">
-        <Img shot={study.cover} sizes={sizes} eager={eager} decorative />
-      </div>
-    </Link>
   );
 }
 
@@ -138,21 +142,25 @@ function SectionHead({
   eyebrow,
   title,
   aside,
+  dark,
 }: {
   id: string;
   eyebrow: string;
   title: string;
   aside?: string;
+  dark?: boolean;
 }) {
   return (
     <Reveal className="mb-12 grid gap-6 md:mb-16 lg:grid-cols-12 lg:items-end">
       <div className="lg:col-span-7">
-        <p className="t-eyebrow mb-4">{eyebrow}</p>
-        <h2 id={`${id}-title`} className="t-h2">
+        <p className={`t-eyebrow mb-4 ${dark ? "!text-paper/60" : ""}`}>{eyebrow}</p>
+        <h2 id={`${id}-title`} className={`t-h2 ${dark ? "!text-paper" : ""}`}>
           {title}
         </h2>
       </div>
-      {aside ? <p className="max-w-[46ch] text-muted lg:col-span-5 lg:justify-self-end">{aside}</p> : null}
+      {aside ? (
+        <p className={`max-w-[46ch] lg:col-span-5 lg:justify-self-end ${dark ? "text-paper/70" : "text-muted"}`}>{aside}</p>
+      ) : null}
     </Reveal>
   );
 }
@@ -161,18 +169,18 @@ function SectionHead({
 
 function SelectedWork() {
   return (
-    <section id="work" aria-labelledby="work-title" className="section-y scroll-mt-0">
+    <section id="work" aria-labelledby="work-title" className="section-y">
       <div className="container-x">
         <SectionHead
           id="work"
           eyebrow="Selected work"
           title="Case studies"
-          aside="Four products across career tech, payments, nonprofit finance and financial reporting: the problem, my role, the key design decisions and the real screens."
+          aside="Four products across career tech, payments, nonprofit finance and financial reporting. Each shows the problem, my role, the key design decisions and the real screens."
         />
-        <ol className="grid gap-x-8 gap-y-16 md:grid-cols-2 md:gap-y-20">
+        <ol>
           {caseStudies.map((c, i) => (
-            <li key={c.slug} className={i % 2 === 1 ? "md:mt-24" : ""}>
-              <WorkCard study={c} index={i} />
+            <li key={c.slug} className="border-t border-line py-12 first:border-t-0 first:pt-0 md:py-16">
+              <WorkRow study={c} flip={i % 2 === 1} />
             </li>
           ))}
         </ol>
@@ -181,45 +189,83 @@ function SelectedWork() {
   );
 }
 
-function WorkCard({ study, index }: { study: CaseStudy; index: number }) {
+function WorkRow({ study, flip }: { study: CaseStudy; flip: boolean }) {
   const reduce = useReducedMotion();
   const tall = study.cover.height / study.cover.width > 0.9;
-  return (
-    <Link to={`/work/${study.slug}`} className="group block rounded-xl" aria-labelledby={`card-${study.slug}`}>
-      <m.div
-        className="relative aspect-[4/3.4] overflow-hidden rounded-xl"
-        style={{ backgroundColor: study.stage }}
-        initial={reduce ? false : { clipPath: "inset(14% 6% 0% 6% round 12px)", opacity: 0.4 }}
-        whileInView={{ clipPath: "inset(0% 0% 0% 0% round 12px)", opacity: 1 }}
-        viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-        transition={{ duration: 1, ease: easeOut }}
-      >
-        <div
-          className={`frame absolute left-[9%] top-[11%] transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:-translate-y-2 group-hover:scale-[1.015] ${
-            tall ? "w-[78%]" : "w-[112%]"
-          }`}
-        >
-          <Img shot={study.cover} sizes="(min-width: 768px) 46vw, 100vw" decorative />
-        </div>
-      </m.div>
+  const showRole = isShown(study, "role");
+  const showTimeline = isShown(study, "timeline");
 
-      <div className="mt-6 grid grid-cols-[auto_1fr] gap-x-5">
-        <span className="pt-1 text-sm font-medium tabular-nums text-muted">{String(index + 1).padStart(2, "0")}</span>
-        <div>
-          <p className="text-sm text-muted">
-            {study.category} · {study.platform}
-          </p>
-          <h3 id={`card-${study.slug}`} className="t-h3 mt-1.5">
+  return (
+    <article aria-labelledby={`row-${study.slug}`} className="group grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+      <Link to={`/work/${study.slug}`} tabIndex={-1} aria-hidden className={`block lg:col-span-7 ${flip ? "lg:order-2" : ""}`}>
+        <m.div
+          className="relative aspect-[16/11] overflow-hidden rounded-xl"
+          style={{ backgroundColor: study.stage }}
+          initial={reduce ? false : { clipPath: "inset(10% 4% 0% 4% round 12px)", opacity: 0.5 }}
+          whileInView={{ clipPath: "inset(0% 0% 0% 0% round 12px)", opacity: 1 }}
+          viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+          transition={{ duration: 0.9, ease: easeOut }}
+        >
+          <div
+            className={`frame absolute top-[9%] transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:-translate-y-2 ${
+              tall ? "left-[15%] w-[70%]" : "left-[7%] w-[100%]"
+            }`}
+          >
+            <Img shot={study.cover} sizes="(min-width: 1024px) 700px, 100vw" decorative />
+          </div>
+        </m.div>
+      </Link>
+
+      <div className={`lg:col-span-5 ${flip ? "lg:order-1" : ""}`}>
+        <p className="text-sm text-muted">
+          {study.category} · {study.platform}
+        </p>
+        <h3 id={`row-${study.slug}`} className="mt-2 text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.08] tracking-[-0.03em]">
+          <Link to={`/work/${study.slug}`} className="transition-colors hover:text-accent">
             {study.title}
-          </h3>
-          <p className="mt-2 max-w-[52ch]">{study.tagline}</p>
-          <p className="mt-4 inline-flex items-center gap-2 font-semibold text-ink transition-colors group-hover:text-accent">
-            Read case study
-            <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
-          </p>
-        </div>
+          </Link>
+        </h3>
+        <p className="mt-3 text-[1.0625rem]">{study.tagline}</p>
+
+        <dl className="mt-6 space-y-5 border-t border-line pt-5">
+          <div>
+            <dt className="t-eyebrow">Problem</dt>
+            <dd className="mt-1.5 text-ink">{study.problemShort}</dd>
+          </div>
+          <div>
+            <dt className="t-eyebrow">Key decisions</dt>
+            <dd>
+              <ul className="mt-2 space-y-1.5">
+                {study.decisions.map((d) => (
+                  <li key={d.title} className="flex gap-3 text-ink">
+                    <span aria-hidden className="mt-[0.7em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    {d.title}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+          {showRole || showTimeline ? (
+            <div>
+              <dt className="t-eyebrow">Role</dt>
+              <dd className="mt-1.5 text-ink">
+                {[showRole && study.role, showTimeline && study.timeline].filter(Boolean).join(" · ")}
+                {study.unconfirmed.length ? <Unconfirmed /> : null}
+              </dd>
+            </div>
+          ) : null}
+        </dl>
+
+        <Link
+          to={`/work/${study.slug}`}
+          className="mt-7 inline-flex items-center gap-2 font-semibold text-ink transition-colors hover:text-accent"
+        >
+          Read case study
+          <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+          <span className="sr-only">: {study.title}</span>
+        </Link>
       </div>
-    </Link>
+    </article>
   );
 }
 
@@ -273,37 +319,36 @@ function MoreWork() {
 function About() {
   return (
     <section id="about" aria-labelledby="about-title" className="border-t border-line section-y">
-      <div className="container-x grid gap-12 lg:grid-cols-12">
+      <div className="container-x grid gap-10 lg:grid-cols-12">
         <Reveal className="lg:col-span-5">
           <p className="t-eyebrow mb-4">About</p>
           <h2 id="about-title" className="t-h2 max-w-[13ch]">
             Clarity for products with real complexity
           </h2>
         </Reveal>
-        <div className="lg:col-span-7">
-          <Reveal className="space-y-5">
-            {site.about.paragraphs.map((p) => (
-              <p key={p} className="t-lead">
-                {p}
-              </p>
-            ))}
-          </Reveal>
-        </div>
+        <Reveal className="space-y-5 lg:col-span-7 lg:pt-9">
+          {site.about.paragraphs.map((p) => (
+            <p key={p} className="t-lead">
+              <Rich text={p} />
+            </p>
+          ))}
+        </Reveal>
       </div>
 
-      <div className="container-x mt-16 md:mt-24">
-        <h3 className="t-eyebrow mb-6">Design philosophy</h3>
-        <ol className="grid gap-8 md:grid-cols-3 md:gap-10">
-          {site.about.principles.map((p, i) => (
-            <li key={p.title} className="border-t border-ink pt-5">
-              <Reveal delay={i * 0.08}>
-                <p className="text-sm tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</p>
-                <h4 className="mt-3 text-xl">{p.title}</h4>
-                <p className="mt-3 text-muted">{p.body}</p>
+      <div className="container-x mt-16 md:mt-20">
+        <h3 className="t-eyebrow mb-6">How I lead</h3>
+        <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {site.about.leadership.map((item, i) => (
+            <li key={item.title} className="border-t-2 border-ink pt-5">
+              <Reveal delay={i * 0.06}>
+                <h4 className="text-xl leading-snug">{item.title}</h4>
+                <p className="mt-3 text-muted">
+                  <Rich text={item.body} />
+                </p>
               </Reveal>
             </li>
           ))}
-        </ol>
+        </ul>
       </div>
     </section>
   );
@@ -314,15 +359,16 @@ function About() {
 function Expertise() {
   const { capabilities, domains, tools, ai } = site.expertise;
   return (
-    <section id="expertise" aria-labelledby="expertise-title" className="border-t border-line section-y">
-      <div className="container-x">
-        <SectionHead id="expertise" eyebrow="Expertise" title="What I bring to a team" />
+    <section id="expertise" aria-labelledby="expertise-title" className="bg-ink text-paper">
+      <div className="container-x section-y">
+        <SectionHead id="expertise" eyebrow="Expertise" title="What I bring to a team" dark />
+
         <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {capabilities.map((c, i) => (
-            <li key={c.title}>
+            <li key={c.title} className="border-t border-paper/15 pt-5">
               <Reveal delay={i * 0.06}>
-                <h3 className="text-lg">{c.title}</h3>
-                <ul className="mt-4 space-y-2 text-muted">
+                <h3 className="text-lg !text-paper">{c.title}</h3>
+                <ul className="mt-4 space-y-2 text-paper/75">
                   {c.items.map((it) => (
                     <li key={it}>{it}</li>
                   ))}
@@ -332,18 +378,31 @@ function Expertise() {
           ))}
         </ul>
 
-        <div className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-12">
-          <div className="md:col-span-6">
-            <h3 className="t-eyebrow">Domains</h3>
-            <p className="mt-4 text-lg leading-relaxed text-ink">{domains.join(" · ")}</p>
+        {/* AI-assisted workflow: given its own panel so it reads at a glance */}
+        <Reveal className="mt-16 rounded-2xl border border-paper/15 bg-paper/[0.05] p-7 md:p-10">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-5">
+              <h3 className="t-eyebrow !text-paper/60">AI-assisted workflow</h3>
+              <p className="mt-3 text-xl leading-snug !text-paper">{ai.summary}</p>
+            </div>
+            <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-paper/15 sm:grid-cols-4 lg:col-span-7">
+              {ai.tools.map((t) => (
+                <li key={t.name} className="grid place-items-center bg-ink px-5 py-7" title={t.name}>
+                  <img src={t.logo} alt={t.name} width={44} height={44} className="h-11 w-11" loading="lazy" />
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="md:col-span-3">
-            <h3 className="t-eyebrow">Design tools</h3>
-            <p className="mt-4 text-lg leading-relaxed text-ink">{tools.join(" · ")}</p>
+        </Reveal>
+
+        <div className="mt-14 grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-7">
+            <h3 className="t-eyebrow !text-paper/60">Domains</h3>
+            <p className="mt-4 text-lg leading-relaxed text-paper">{domains.join(" · ")}</p>
           </div>
-          <div className="md:col-span-3">
-            <h3 className="t-eyebrow">AI-assisted workflow</h3>
-            <p className="mt-4 text-lg leading-relaxed text-ink">{ai.join(" · ")}</p>
+          <div className="md:col-span-5">
+            <h3 className="t-eyebrow !text-paper/60">Design tools</h3>
+            <p className="mt-4 text-lg leading-relaxed text-paper">{tools.join(" · ")}</p>
           </div>
         </div>
       </div>
@@ -355,7 +414,7 @@ function Expertise() {
 
 function Experience() {
   return (
-    <section id="experience" aria-labelledby="experience-title" className="border-t border-line section-y">
+    <section id="experience" aria-labelledby="experience-title" className="section-y">
       <div className="container-x">
         <SectionHead
           id="experience"
@@ -364,19 +423,28 @@ function Experience() {
           aside="From graphic and brand design to leading the design function and end-to-end UX for B2B products."
         />
         <ol className="border-t border-line">
-          {site.experience.map((e) => (
+          {site.experience.map((e, idx) => (
             <li key={e.period} className="border-b border-line">
-              <Reveal className="grid gap-3 py-9 md:grid-cols-12 md:gap-8">
-                <p className="text-sm tabular-nums text-muted md:col-span-3 md:pt-1.5">{e.period}</p>
-                <div className="md:col-span-4">
-                  <h3 className="text-xl">{e.role}</h3>
+              <Reveal className="grid gap-4 py-9 md:grid-cols-12 md:gap-8">
+                <div className="md:col-span-5">
+                  <p className="text-sm tabular-nums text-muted">{e.period}</p>
+                  <h3 className="mt-2 flex flex-wrap items-center gap-2 text-xl">
+                    {e.role}
+                    {idx === 0 ? (
+                      <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold tracking-normal text-accent">
+                        Current
+                      </span>
+                    ) : null}
+                  </h3>
                   <p className="mt-1 text-muted">{e.org}</p>
                 </div>
-                <ul className="space-y-2.5 md:col-span-5">
+                <ul className="space-y-2.5 md:col-span-7">
                   {e.highlights.map((h) => (
                     <li key={h} className="flex gap-3">
                       <span aria-hidden className="mt-[0.7em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                      <span>{h}</span>
+                      <span>
+                        <Rich text={h} />
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -386,8 +454,8 @@ function Experience() {
         </ol>
 
         <div className="mt-12 grid gap-8 md:grid-cols-12 md:gap-8">
-          <h3 className="t-eyebrow md:col-span-3 md:pt-1">Education</h3>
-          <ul className="grid gap-6 sm:grid-cols-2 md:col-span-9">
+          <h3 className="t-eyebrow md:col-span-5 md:pt-1">Education</h3>
+          <ul className="grid gap-6 sm:grid-cols-2 md:col-span-7">
             {site.education.map((ed) => (
               <li key={ed.degree}>
                 <p className="font-semibold text-ink">{ed.degree}</p>
