@@ -31,9 +31,9 @@ function Hero() {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -40]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -110]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -180]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 24]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 56]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 90]);
   const words = site.hero.headline.split(" ");
 
   const [a, b, c] = [caseStudies[1], caseStudies[2], caseStudies[3]];
@@ -77,7 +77,7 @@ function Hero() {
             {site.contact.resumeUrl ? (
               <a href={site.contact.resumeUrl} className="btn btn-ghost" download>
                 <Download />
-                Résumé
+                Download CV
               </a>
             ) : (
               <a href={`mailto:${site.contact.email}`} className="btn btn-ghost">
@@ -88,15 +88,11 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={0.45}>
-          <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-3 md:mt-16">
-            {[
-              ["Experience", `${site.yearsExperience} years in UI/UX & product design`],
-              ["Based in", site.location],
-              ["Availability", site.availability],
-            ].map(([k, v]) => (
-              <div key={k} className="border-b border-line py-4 sm:border-b-0 sm:pr-6">
-                <dt className="text-sm text-muted">{k}</dt>
-                <dd className="mt-1 font-medium text-ink">{v}</dd>
+          <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-2 md:mt-16 lg:grid-cols-4">
+            {site.hero.proof.map(({ label, value }) => (
+              <div key={label} className="border-b border-line py-4 sm:pr-6 lg:border-b-0">
+                <dt className="text-sm text-muted">{label}</dt>
+                <dd className="mt-1 font-medium leading-snug text-ink">{value}</dd>
               </div>
             ))}
           </dl>
@@ -105,14 +101,14 @@ function Hero() {
 
       {/* Real product screens; each opens its case study */}
       <div className="container-x mt-12 md:mt-16" aria-label="Product screens from selected work">
-        <div className="relative rounded-2xl bg-stage px-5 pt-8 sm:px-10 sm:pt-12 lg:h-[min(46vw,620px)] lg:px-0 lg:pt-0">
-          <m.div style={{ y: y1 }} className="relative z-10 lg:absolute lg:left-[5%] lg:top-[12%] lg:w-[48%]">
-            <HeroShot study={a} sizes="(min-width: 1024px) 600px, 92vw" eager />
+        <div className="relative overflow-hidden rounded-2xl bg-stage px-5 pt-8 sm:px-10 sm:pt-12 lg:h-[min(44vw,600px)] lg:px-0 lg:pt-0">
+          <m.div style={{ y: y1 }} className="relative z-10 lg:absolute lg:left-[4%] lg:top-[10%] lg:w-[52%]">
+            <HeroShot study={a} sizes="(min-width: 1024px) 640px, 92vw" eager />
           </m.div>
-          <m.div style={{ y: y2 }} className="relative z-20 hidden lg:absolute lg:left-[38%] lg:top-[26%] lg:block lg:w-[38%]">
+          <m.div style={{ y: y2 }} className="relative z-20 hidden lg:absolute lg:left-[36%] lg:top-[30%] lg:block lg:w-[38%]">
             <HeroShot study={b} sizes="480px" />
           </m.div>
-          <m.div style={{ y: y3 }} className="relative z-30 hidden lg:absolute lg:right-[4%] lg:top-[40%] lg:block lg:w-[40%]">
+          <m.div style={{ y: y3 }} className="relative z-30 hidden lg:absolute lg:right-[3%] lg:top-[44%] lg:block lg:w-[44%]">
             <HeroShot study={c} sizes="500px" />
           </m.div>
         </div>
@@ -241,10 +237,10 @@ function MoreWork() {
           title="Additional product UI"
           aside="Dashboards, admin tools and product hubs from other engagements. Select a screen to view it full size."
         />
-        <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-6">
           {moreProjects.map((p, i) => (
-            <li key={p.title}>
-              <Reveal delay={(i % 3) * 0.06}>
+            <li key={p.title} className={i < 2 ? "lg:col-span-3" : "lg:col-span-2"}>
+              <Reveal delay={(i < 2 ? i : i - 2) * 0.06}>
                 <button
                   type="button"
                   onClick={() => setOpen(i)}
@@ -253,7 +249,7 @@ function MoreWork() {
                 >
                   <div className="relative aspect-[16/10.5] overflow-hidden rounded-lg bg-stage">
                     <div className="frame absolute inset-x-[7%] top-[9%] transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:-translate-y-1.5">
-                      <Img shot={p.shot} sizes="(min-width: 1024px) 380px, (min-width: 640px) 46vw, 92vw" decorative />
+                      <Img shot={p.shot} sizes="(min-width: 1024px) 580px, (min-width: 640px) 46vw, 92vw" decorative />
                     </div>
                     <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-surface text-ink opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                       <Expand width={16} height={16} />
@@ -316,7 +312,7 @@ function About() {
 /* ------------------------------------------------------------ Expertise */
 
 function Expertise() {
-  const { capabilities, domains, tools } = site.expertise;
+  const { capabilities, domains, tools, ai } = site.expertise;
   return (
     <section id="expertise" aria-labelledby="expertise-title" className="border-t border-line section-y">
       <div className="container-x">
@@ -336,14 +332,18 @@ function Expertise() {
           ))}
         </ul>
 
-        <div className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-2">
-          <div>
+        <div className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-12">
+          <div className="md:col-span-6">
             <h3 className="t-eyebrow">Domains</h3>
             <p className="mt-4 text-lg leading-relaxed text-ink">{domains.join(" · ")}</p>
           </div>
-          <div>
-            <h3 className="t-eyebrow">Tools</h3>
+          <div className="md:col-span-3">
+            <h3 className="t-eyebrow">Design tools</h3>
             <p className="mt-4 text-lg leading-relaxed text-ink">{tools.join(" · ")}</p>
+          </div>
+          <div className="md:col-span-3">
+            <h3 className="t-eyebrow">AI-assisted workflow</h3>
+            <p className="mt-4 text-lg leading-relaxed text-ink">{ai.join(" · ")}</p>
           </div>
         </div>
       </div>
@@ -361,22 +361,50 @@ function Experience() {
           id="experience"
           eyebrow="Experience"
           title={`${site.yearsExperience} years of design`}
-          aside="From visual and brand design to leading end-to-end UX on complex B2B platforms."
+          aside="From graphic and brand design to leading the design function and end-to-end UX for B2B products."
         />
         <ol className="border-t border-line">
           {site.experience.map((e) => (
             <li key={e.period} className="border-b border-line">
-              <Reveal className="grid gap-2 py-8 md:grid-cols-12 md:gap-8">
-                <p className="text-sm tabular-nums text-muted md:col-span-3 md:pt-1">{e.period}</p>
+              <Reveal className="grid gap-3 py-9 md:grid-cols-12 md:gap-8">
+                <p className="text-sm tabular-nums text-muted md:col-span-3 md:pt-1.5">{e.period}</p>
                 <div className="md:col-span-4">
                   <h3 className="text-xl">{e.role}</h3>
                   <p className="mt-1 text-muted">{e.org}</p>
                 </div>
-                <p className="md:col-span-5">{e.summary}</p>
+                <ul className="space-y-2.5 md:col-span-5">
+                  {e.highlights.map((h) => (
+                    <li key={h} className="flex gap-3">
+                      <span aria-hidden className="mt-[0.7em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
               </Reveal>
             </li>
           ))}
         </ol>
+
+        <div className="mt-12 grid gap-8 md:grid-cols-12 md:gap-8">
+          <h3 className="t-eyebrow md:col-span-3 md:pt-1">Education</h3>
+          <ul className="grid gap-6 sm:grid-cols-2 md:col-span-9">
+            {site.education.map((ed) => (
+              <li key={ed.degree}>
+                <p className="font-semibold text-ink">{ed.degree}</p>
+                <p className="mt-1 text-muted">
+                  {ed.school} · {ed.year}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {site.contact.resumeUrl ? (
+          <a href={site.contact.resumeUrl} download className="btn btn-primary mt-12">
+            <Download />
+            Download full CV (PDF)
+          </a>
+        ) : null}
       </div>
     </section>
   );
@@ -439,7 +467,7 @@ function Contact() {
             {resumeUrl ? (
               <a href={resumeUrl} download className="btn bg-paper text-ink hover:bg-white">
                 <Download />
-                Download résumé
+                Download CV
               </a>
             ) : null}
           </div>

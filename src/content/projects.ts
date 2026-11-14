@@ -30,7 +30,6 @@ export interface CaseStudy {
   platform: string;
   role: string;
   timeline: string;
-  tools: string[];
   cover: Shot;
   /** Accent tint behind screenshots on cards (kept subtle). */
   stage: string;
@@ -71,7 +70,6 @@ export const caseStudies: CaseStudy[] = [
     platform: "Web app",
     role: "Lead Product Designer",
     timeline: "14 weeks",
-    tools: ["Figma", "FigJam", "Maze"],
     cover: S.uptraJobs,
     stage: "#E9E8F4",
     seoDescription:
@@ -114,7 +112,6 @@ export const caseStudies: CaseStudy[] = [
     platform: "Web app · QuickBooks integration",
     role: "Senior Product Designer",
     timeline: "10 weeks",
-    tools: ["Figma", "FigJam", "Notion"],
     cover: S.gcHome,
     stage: "#F1EFD9",
     seoDescription:
@@ -160,7 +157,6 @@ export const caseStudies: CaseStudy[] = [
     platform: "Web app",
     role: "Lead Product Designer",
     timeline: "16 weeks",
-    tools: ["Figma", "FigJam", "Jira"],
     cover: S.capDashboard,
     stage: "#E6EBE2",
     seoDescription:
@@ -202,7 +198,6 @@ export const caseStudies: CaseStudy[] = [
     platform: "Web app",
     role: "Senior Product Designer",
     timeline: "12 weeks",
-    tools: ["Figma", "Miro", "Notion"],
     cover: S.cfInflow,
     stage: "#E8E6F3",
     seoDescription:
@@ -268,11 +263,6 @@ export const moreProjects: MoreProject[] = [
     title: "CarCollection",
     description: "Dark-theme admin for a dealership: inventory, sell-car and financing requests, and service bookings.",
     shot: shot("carcollection-admin", 1200, 731, "CarCollection admin dashboard with inventory metrics and recent activity"),
-  },
-  {
-    title: "Uifry",
-    description: "Personal finance dashboard with income analytics, cards and transaction history.",
-    shot: shot("uifry-dashboard", 1200, 853, "Uifry finance dashboard in a dark theme"),
   },
 ];
 

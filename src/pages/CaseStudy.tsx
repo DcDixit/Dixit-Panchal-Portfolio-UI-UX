@@ -67,7 +67,7 @@ function CaseStudyView({ study }: { study: Study }) {
           transition={{ duration: 0.8, ease: easeOut }}
         >
           <p className="t-eyebrow mt-10">
-            Case study · {study.category}
+            Case study
           </p>
           <h1 id="cs-title" className="t-display mt-4 max-w-[14ch]">
             {study.title}
@@ -80,7 +80,7 @@ function CaseStudyView({ study }: { study: Study }) {
             ["Role", study.role],
             ["Timeline", study.timeline],
             ["Platform", study.platform],
-            ["Tools", study.tools.join(", ")],
+            ["Domain", study.category],
           ].map(([k, v]) => (
             <div key={k} className="border-b border-line py-4 pr-4 md:border-b-0">
               <dt className="text-sm text-muted">{k}</dt>

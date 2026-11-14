@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { site } from "../content/site";
-import { Close, Menu } from "./Icons";
+import { Close, Download, Menu } from "./Icons";
 
 const NAV = [
   { id: "work", label: "Work" },
@@ -112,14 +112,22 @@ export function Header() {
             })}
             {site.contact.resumeUrl ? (
               <li className="ml-2">
-                <a href={site.contact.resumeUrl} className="btn btn-ghost min-h-10 px-4" download>
-                  Résumé
+                <a href={site.contact.resumeUrl} className="btn btn-primary min-h-10 px-4" download>
+                  <Download width={16} height={16} />
+                  Download CV
                 </a>
               </li>
             ) : null}
           </ul>
         </nav>
 
+        <div className="flex items-center gap-1 md:hidden">
+        {site.contact.resumeUrl ? (
+          <a href={site.contact.resumeUrl} download className="btn btn-primary min-h-10 px-3.5 text-sm" aria-label="Download CV (PDF)">
+            <Download width={16} height={16} />
+            CV
+          </a>
+        ) : null}
         <button
           type="button"
           className="-mr-2 grid h-11 w-11 place-items-center rounded-full text-ink md:hidden"
@@ -130,6 +138,7 @@ export function Header() {
         >
           {open ? <Close width={22} height={22} /> : <Menu width={22} height={22} />}
         </button>
+        </div>
       </div>
 
       <nav
@@ -153,7 +162,7 @@ export function Header() {
           {site.contact.resumeUrl ? (
             <li className="pt-4">
               <a href={site.contact.resumeUrl} className="btn btn-primary w-full" download>
-                Download résumé
+                Download CV
               </a>
             </li>
           ) : null}
