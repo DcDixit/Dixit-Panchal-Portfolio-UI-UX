@@ -97,6 +97,7 @@ export function Lightbox({ items, index, onChange }: Props) {
               width={item.shot.width}
               height={item.shot.height}
               className="h-auto w-full max-w-[1600px] rounded-md bg-white"
+              style={item.shot.height / item.shot.width > 1.5 ? { maxWidth: Math.min(item.shot.width, 820) } : undefined}
             />
           </div>
 

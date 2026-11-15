@@ -347,6 +347,33 @@ export const moreProjects: MoreProject[] = [
   },
 ];
 
+/** Supporting graphic design work, shown after all UI/UX work. Extracted from the owner's graphic portfolio PDF. */
+export interface GraphicPiece {
+  title: string;
+  kind: string;
+  description: string;
+  /** Square crop for the grid. */
+  thumb: Shot;
+  /** Full presentation board for the lightbox. */
+  full: Shot;
+}
+
+const gd = (name: string, title: string, kind: string, description: string, fullHeight: number, fullWidth = 1000): GraphicPiece => ({
+  title,
+  kind,
+  description,
+  thumb: shot(`graphic/${name}`, 800, 800, `${title}: ${kind.toLowerCase()}`),
+  full: shot(`graphic/${name}-full`, fullWidth, fullHeight, `${title} presentation board`),
+});
+
+export const graphicWork: GraphicPiece[] = [
+  gd("social-art", "Social Art", "Brand identity", "Logo, signage and website applications.", 2481),
+  gd("hotel-interiors", "Hotel Interiors", "Print", "Flyer for a custom hotel furniture and joinery maker.", 2840),
+  gd("company-formation", "Company Formation", "Editorial print", "Multi-page brochure for a business setup consultancy.", 3320),
+  gd("zondaro", "Zondaro", "Exhibition", "Booth walls, roll-ups and counter, through to the built stand.", 2390, 960),
+  gd("fireflies", "We Are All Fireflies", "Book cover", "Cover design and typography.", 1000),
+];
+
 export function getCaseStudy(slug: string | undefined): CaseStudy | undefined {
   return caseStudies.find((c) => c.slug === slug);
 }

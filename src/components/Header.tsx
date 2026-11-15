@@ -14,6 +14,7 @@ const NAV = [
 const SECTION_TO_NAV: Record<string, string> = {
   work: "work",
   "more-work": "work",
+  "graphic-work": "work",
   about: "about",
   expertise: "about",
   experience: "experience",
