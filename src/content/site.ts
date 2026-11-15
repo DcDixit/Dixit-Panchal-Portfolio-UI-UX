@@ -8,15 +8,34 @@
  * Optional fields (linkedin, resumeUrl, siteUrl) are hidden automatically when empty,
  * so the site never shows a placeholder link.
  */
+
+/**
+ * Build-time origin. vite.config.ts evaluates this in Node, where Vercel provides
+ * VERCEL_PROJECT_PRODUCTION_URL, and passes the result to the browser bundle as VITE_SITE_URL.
+ */
+function resolveSiteUrl(): string {
+  const fromBundle = import.meta.env?.VITE_SITE_URL as string | undefined;
+  if (fromBundle) return fromBundle;
+  const env = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env;
+  if (!env) return "";
+  if (env.SITE_URL) return env.SITE_URL.replace(/\/$/, "");
+  if (env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  return "";
+}
+
 export const site = {
   name: "Dixit Panchal",
   role: "Senior UI/UX Designer",
-  yearsExperience: "10+",
+  yearsExperience: "9+",
   location: "Ahmedabad, India",
   availability: "Open to remote roles",
 
-  /** Production origin without trailing slash, e.g. "https://dixitpanchal.com". Used for canonical, Open Graph and sitemap URLs. */
-  siteUrl: "" as string,
+  /**
+   * Production origin without trailing slash. Used for canonical, Open Graph and sitemap URLs.
+   * Resolved at build time (see resolveSiteUrl): on Vercel it is the project's production domain,
+   * so nothing needs editing here. Set SITE_URL to override, e.g. after adding a custom domain.
+   */
+  siteUrl: resolveSiteUrl(),
 
   contact: {
     email: "dixit27592@gmail.com",
@@ -30,11 +49,11 @@ export const site = {
     /** Words wrapped in ** are emphasised. */
     headline: "I design **clear, usable** products for complex SaaS and fintech workflows.",
     intro:
-      "Senior UI/UX designer with **10+ years** of experience across **B2B SaaS, fintech and healthcare**. I turn data-heavy work in payments, financial reporting, payroll and hiring into interfaces people understand at a glance.",
+      "Senior UI/UX designer with **9+ years** of experience across **B2B SaaS, fintech and healthcare**. I turn data-heavy work in payments, financial reporting, payroll and hiring into interfaces people understand at a glance.",
     current: "Lead UI/UX Designer at **Satva Solutions**",
     /** Short, factual proof points from the CV. */
     proof: [
-      { value: "10+", label: "years in UI/UX and product design" },
+      { value: "9+", label: "years in UI/UX and product design" },
       { value: "25+", label: "client engagements across SaaS, fintech and healthcare" },
       { value: "120+", label: "components in the design system I built" },
     ],

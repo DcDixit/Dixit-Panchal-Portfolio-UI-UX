@@ -61,7 +61,7 @@ function seoPages(): Plugin {
         );
         robots.push(`Sitemap: ${absolute("/sitemap.xml")}`);
       } else {
-        this.warn("site.siteUrl is empty, so sitemap.xml, canonical URLs and absolute og:image URLs were skipped. Set it in src/content/site.ts before deploying.");
+        this.warn("site.siteUrl is empty, so sitemap.xml, canonical URLs and absolute og:image URLs were skipped. It is set automatically on Vercel; elsewhere, build with SITE_URL=https://your-domain.");
       }
       writeFileSync(path.join(outDir, "robots.txt"), robots.join("\n") + "\n");
     },
@@ -70,4 +70,6 @@ function seoPages(): Plugin {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), seoPages()],
+  // Same origin in the browser bundle as in the generated HTML (see resolveSiteUrl in site.ts).
+  define: { "import.meta.env.VITE_SITE_URL": JSON.stringify(site.siteUrl) },
 });

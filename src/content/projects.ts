@@ -84,8 +84,8 @@ export const caseStudies: CaseStudy[] = [
     category: "Career & HR tech",
     platform: "Web app",
     role: "Lead Product Designer",
-    timeline: "14 weeks",
-    unconfirmed: ["role", "timeline"],
+    timeline: "About 14 weeks",
+    unconfirmed: ["role"],
     cover: S.uptraInterview,
     stage: "#E9E8F4",
     seoDescription:
@@ -145,8 +145,8 @@ export const caseStudies: CaseStudy[] = [
     category: "Fintech & payments",
     platform: "Web app · QuickBooks integration",
     role: "Senior Product Designer",
-    timeline: "10 weeks",
-    unconfirmed: ["role", "timeline"],
+    timeline: "About 10 weeks",
+    unconfirmed: ["role"],
     cover: S.gcHome,
     stage: "#F1EFD9",
     seoDescription:
@@ -211,8 +211,8 @@ export const caseStudies: CaseStudy[] = [
     category: "Nonprofit finance",
     platform: "Web app",
     role: "Lead Product Designer",
-    timeline: "16 weeks",
-    unconfirmed: ["role", "timeline"],
+    timeline: "About 16 weeks",
+    unconfirmed: ["role"],
     cover: S.capDashboard,
     stage: "#E6EBE2",
     seoDescription:
@@ -268,8 +268,8 @@ export const caseStudies: CaseStudy[] = [
     category: "Financial reporting",
     platform: "Web app",
     role: "Senior Product Designer",
-    timeline: "12 weeks",
-    unconfirmed: ["role", "timeline"],
+    timeline: "About 12 weeks",
+    unconfirmed: ["role"],
     cover: S.cfInflow,
     stage: "#E8E6F3",
     seoDescription:
