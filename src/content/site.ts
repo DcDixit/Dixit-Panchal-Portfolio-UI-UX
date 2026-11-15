@@ -49,7 +49,7 @@ export const site = {
     /** Words wrapped in ** are emphasised. */
     headline: "I design **clear, usable** products for complex SaaS and fintech workflows.",
     intro:
-      "Senior UI/UX designer with **9+ years** of experience across **B2B SaaS, fintech and healthcare**. I turn data-heavy work in payments, financial reporting, payroll and hiring into interfaces people understand at a glance.",
+      "Senior UI/UX designer with **9+ years in UI/UX and product design**, working across **B2B SaaS, fintech and healthcare**. I turn data-heavy work in payments, financial reporting, payroll and hiring into interfaces people understand at a glance.",
     current: "Lead UI/UX Designer at **Satva Solutions**",
     /** Short, factual proof points from the CV. */
     proof: [
@@ -165,6 +165,6 @@ export const site = {
 
 export const seo = {
   title: `${site.name} · ${site.role}`,
-  description: `${site.name} is a ${site.role} with ${site.yearsExperience} years of experience in B2B SaaS, fintech and healthcare. Lead UI/UX Designer at Satva Solutions. Case studies: Uptra, GoCardless for QuickBooks, CostAllocation Pro and Cash Flow Reporting.`,
+  description: `${site.name} is a ${site.role} with ${site.yearsExperience} years in UI/UX and product design, working across B2B SaaS, fintech and healthcare. Lead UI/UX Designer at Satva Solutions. Case studies: Uptra, GoCardless for QuickBooks, CostAllocation Pro and Cash Flow Reporting.`,
   image: "/work/og/home.jpg",
 };

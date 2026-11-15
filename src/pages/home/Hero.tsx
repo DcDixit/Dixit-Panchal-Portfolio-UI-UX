@@ -24,7 +24,7 @@ export function Hero() {
       >
         <p className="flex items-center gap-2 text-[0.9375rem] font-medium text-muted">
           <span aria-hidden className="h-2 w-2 rounded-full bg-[#2f9e5b]" />
-          {site.location} · {site.availability}
+          {site.location}{"\u00a0· "}{site.availability}
         </p>
         <div className="mt-5 grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-12">
           <h1 id="hero-title" className="lg:col-span-7">

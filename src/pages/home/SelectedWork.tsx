@@ -57,7 +57,7 @@ function WorkRow({ study, flip }: { study: CaseStudy; flip: boolean }) {
 
       <div className={`lg:col-span-5 ${flip ? "lg:order-1" : ""}`}>
         <p className="text-sm text-muted">
-          {study.category} · {study.platform}
+          {study.category}{"\u00a0· "}{study.platform}
         </p>
         <h3 id={`row-${study.slug}`} className="mt-2 text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.08] tracking-[-0.03em]">
           <Link to={`/work/${study.slug}`} className="transition-colors hover:text-accent">
@@ -88,7 +88,7 @@ function WorkRow({ study, flip }: { study: CaseStudy; flip: boolean }) {
             <div>
               <dt className="t-eyebrow">{showRole && showTimeline ? "Role & timeline" : showRole ? "Role" : "Timeline"}</dt>
               <dd className="mt-1.5 text-ink">
-                {[showRole && study.role, showTimeline && study.timeline].filter(Boolean).join(" · ")}
+                {[showRole && study.role, showTimeline && study.timeline].filter(Boolean).join("\u00a0· ")}
                 {study.unconfirmed.length ? <Unconfirmed /> : null}
               </dd>
             </div>

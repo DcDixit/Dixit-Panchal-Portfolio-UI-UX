@@ -11,8 +11,8 @@ export function Experience() {
         <SectionHead
           id="experience"
           eyebrow="Experience"
-          title={`${site.yearsExperience} years of design`}
-          aside="From graphic and brand design to leading the design function and end-to-end UX for B2B products."
+          title="From brand design to leading product design"
+          aside={`${site.yearsExperience} years in UI/UX and product design, building on an early start in graphic and brand design.`}
         />
         <ol className="border-t border-line">
           {site.experience.map((e, idx) => (
@@ -52,7 +52,7 @@ export function Experience() {
               <li key={ed.degree}>
                 <p className="font-semibold text-ink">{ed.degree}</p>
                 <p className="mt-1 text-muted">
-                  {ed.school} · {ed.year}
+                  {ed.school}{"\u00a0· "}{ed.year}
                 </p>
               </li>
             ))}

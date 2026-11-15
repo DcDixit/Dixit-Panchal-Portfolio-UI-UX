@@ -71,5 +71,9 @@ function seoPages(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), seoPages()],
   // Same origin in the browser bundle as in the generated HTML (see resolveSiteUrl in site.ts).
-  define: { "import.meta.env.VITE_SITE_URL": JSON.stringify(site.siteUrl) },
+  // Build year is fixed at build time so pre-rendered and hydrated footers always match.
+  define: {
+    "import.meta.env.VITE_SITE_URL": JSON.stringify(site.siteUrl),
+    "import.meta.env.VITE_BUILD_YEAR": JSON.stringify(String(new Date().getFullYear())),
+  },
 });

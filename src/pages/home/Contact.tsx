@@ -65,7 +65,7 @@ export function Contact() {
         </Reveal>
 
         <p className="mt-16 border-t border-paper/15 pt-6 text-sm text-paper/60">
-          {site.location} · {site.availability}
+          {site.location}{"\u00a0· "}{site.availability}
         </p>
       </div>
     </section>
