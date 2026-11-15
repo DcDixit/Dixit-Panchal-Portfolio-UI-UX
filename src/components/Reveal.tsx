@@ -1,4 +1,4 @@
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import type { ReactNode } from "react";
 
 export const easeOut = [0.22, 1, 0.36, 1] as const;
@@ -15,11 +15,10 @@ export function Reveal({
   delay?: number;
   y?: number;
 }) {
-  const reduce = useReducedMotion();
   return (
     <m.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -8% 0px" }}
       transition={{ duration: 0.7, ease: easeOut, delay }}

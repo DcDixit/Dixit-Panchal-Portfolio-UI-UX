@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Figtree (SIL Open Font License 1.1), self-hosted Latin variable subset, preloaded in index.html. */
+@font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("/fonts/figtree-latin-var.woff2") format("woff2");
+}
+
 /* ------------------------------------------------------------------
    Design tokens: the only place colours, type and spacing are defined.
    Tailwind utilities (bg-paper, text-ink, border-line …) map to these.

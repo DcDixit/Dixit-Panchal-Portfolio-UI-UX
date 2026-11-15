@@ -5,9 +5,12 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { CaseStudy } from "./pages/CaseStudy";
 import { Home } from "./pages/Home";
+import { useIntro, useMarkHydrated } from "./lib/intro";
 import { NotFound } from "./pages/NotFound";
 
 const savedScroll = new Map<string, number>();
+// useLayoutEffect warns during build-time pre-rendering; it only needs to run in the browser.
+const useClientLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 /** Scroll to top on new pages, to #section for hash links, and restore position on Back/Forward. */
 function ScrollManager() {
@@ -23,7 +26,7 @@ function ScrollManager() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useLayoutEffect(() => {
+  useClientLayoutEffect(() => {
     const samePage = prevPath.current === pathname;
     const firstLoad = prevPath.current === null;
     prevPath.current = pathname;
@@ -61,7 +64,8 @@ function ScrollManager() {
 
 export default function App() {
   const { pathname } = useLocation();
-  const reduce = useReducedMotion();
+  const animate = useIntro();
+  useMarkHydrated();
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -78,7 +82,7 @@ export default function App() {
         <main id="main" tabIndex={-1} className="outline-none">
           <m.div
             key={pathname}
-            initial={reduce ? false : { opacity: 0 }}
+            initial={animate ? { opacity: 0 } : false}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
           >

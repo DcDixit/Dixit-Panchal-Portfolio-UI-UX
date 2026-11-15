@@ -10,6 +10,7 @@ import { Unconfirmed } from "../components/Unconfirmed";
 import { caseStudies, getCaseStudy, isShown, type CaseStudy as Study, type Shot } from "../content/projects";
 import { site } from "../content/site";
 import { caseStudyMeta } from "../lib/pageMeta";
+import { useIntro } from "../lib/intro";
 import { useMeta } from "../lib/useMeta";
 import { NotFound } from "./NotFound";
 
@@ -23,6 +24,7 @@ export function CaseStudy() {
 function CaseStudyView({ study }: { study: Study }) {
   useMeta(caseStudyMeta(study.slug)!);
   const reduce = useReducedMotion();
+  const animate = useIntro();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 40, restDelta: 0.001 });
 
@@ -71,7 +73,7 @@ function CaseStudyView({ study }: { study: Study }) {
         </Link>
 
         <m.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
+          initial={animate ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: easeOut }}
         >
@@ -100,7 +102,7 @@ function CaseStudyView({ study }: { study: Study }) {
         <m.div
           className="rounded-2xl px-[6%] pt-[6%]"
           style={{ backgroundColor: study.stage }}
-          initial={reduce ? false : { opacity: 0, y: 30 }}
+          initial={animate ? { opacity: 0, y: 30 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: easeOut, delay: 0.15 }}
         >
