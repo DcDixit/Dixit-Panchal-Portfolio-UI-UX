@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { site } from "../content/site";
 import { Close, Download, Menu } from "./Icons";
+import { LogoMark } from "./Logo";
 
 const NAV = [
   { id: "work", label: "Work" },
@@ -82,10 +83,13 @@ export function Header() {
       }`}
     >
       <div className="container-x flex h-[var(--header-h)] items-center justify-between gap-6">
-        <Link to="/" className="group flex items-baseline gap-2 rounded-sm" aria-label={`${site.name}, home`}>
-          <span className="whitespace-nowrap text-[1.0625rem] font-semibold tracking-[-0.02em] text-ink">{site.name}</span>
-          {/* Hidden at md, where the full nav needs the width; shown again from lg. */}
-          <span className="hidden whitespace-nowrap text-sm text-muted sm:inline md:hidden lg:inline">{site.role}</span>
+        <Link to="/" className="group flex items-center gap-2.5 rounded-sm" aria-label={`${site.name}, home`}>
+          <LogoMark className="h-8 w-8 shrink-0 transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:rotate-180 motion-reduce:transition-none" />
+          <span className="flex items-baseline gap-2">
+            <span className="whitespace-nowrap text-[1.0625rem] font-semibold tracking-[-0.02em] text-ink">{site.name}</span>
+            {/* Hidden at md, where the full nav needs the width; shown again from lg. */}
+            <span className="hidden whitespace-nowrap text-sm text-muted sm:inline md:hidden lg:inline">{site.role}</span>
+          </span>
         </Link>
 
         <nav aria-label="Primary" className="hidden md:block">
