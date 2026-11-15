@@ -84,7 +84,7 @@ function CaseStudyView({ study }: { study: Study }) {
           <p className="t-lead mt-6 max-w-[58ch]">{study.tagline}</p>
         </m.div>
 
-        <dl className="mt-12 grid grid-cols-2 border-t border-line md:grid-cols-4">
+        <dl className="mt-12 grid grid-cols-2 border-t border-line md:grid-cols-4 max-md:[&>*:last-child:nth-child(odd)]:col-span-2">
           {facts.map(({ k, v, flagged }) => (
             <div key={k} className="border-b border-line py-4 pr-4 md:border-b-0">
               <dt className="text-sm text-muted">{k}</dt>

@@ -33,8 +33,9 @@ export function Expertise() {
             </div>
             <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-paper/15 sm:grid-cols-4 lg:col-span-7">
               {ai.tools.map((t) => (
-                <li key={t.name} className="grid place-items-center bg-ink px-5 py-7" title={t.name}>
-                  <img src={t.logo} alt={t.name} width={44} height={44} className="h-11 w-11" loading="lazy" />
+                <li key={t.name} className="flex flex-col items-center justify-center gap-3 bg-ink px-5 py-6">
+                  <img src={t.logo} alt="" width={40} height={40} className="h-10 w-10" loading="lazy" />
+                  <span className="text-sm text-paper/75">{t.name}</span>
                 </li>
               ))}
             </ul>
@@ -44,11 +45,11 @@ export function Expertise() {
         <div className="mt-14 grid gap-10 md:grid-cols-12">
           <div className="md:col-span-7">
             <h3 className="t-eyebrow !text-paper/60">Domains</h3>
-            <p className="mt-4 text-lg leading-relaxed text-paper">{domains.join(" · ")}</p>
+            <p className="mt-4 text-lg leading-relaxed text-paper">{domains.join(" · ")}</p>
           </div>
           <div className="md:col-span-5">
             <h3 className="t-eyebrow !text-paper/60">Design tools</h3>
-            <p className="mt-4 text-lg leading-relaxed text-paper">{tools.join(" · ")}</p>
+            <p className="mt-4 text-lg leading-relaxed text-paper">{tools.join(" · ")}</p>
           </div>
         </div>
       </div>

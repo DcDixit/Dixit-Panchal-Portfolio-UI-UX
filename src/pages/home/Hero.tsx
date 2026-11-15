@@ -68,14 +68,16 @@ export function Hero() {
         >
           <Link
             to={`/work/${back.slug}`}
-            aria-label={`${back.title} case study`}
+            tabIndex={-1}
+            aria-hidden
             className="frame absolute right-[4%] top-[9%] hidden w-[50%] transition-transform duration-500 ease-[var(--ease-out-soft)] hover:-translate-y-1 sm:block"
           >
             <Img shot={back.cover} sizes="(min-width: 1024px) 620px, 50vw" decorative />
           </Link>
           <Link
             to={`/work/${front.slug}`}
-            aria-label={`${front.title} case study`}
+            tabIndex={-1}
+            aria-hidden
             className="frame absolute left-[6%] top-[16%] w-[88%] transition-transform duration-500 ease-[var(--ease-out-soft)] hover:-translate-y-1 sm:w-[56%]"
           >
             <Img shot={front.cover} sizes="(min-width: 1024px) 700px, 90vw" eager decorative />
