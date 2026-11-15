@@ -175,7 +175,7 @@ function SelectedWork() {
           id="work"
           eyebrow="Selected work"
           title="Case studies"
-          aside="Four products across career tech, payments, nonprofit finance and financial reporting. Each shows the problem, my role, the key design decisions and the real screens."
+          aside="Four products across career tech, payments, nonprofit finance and financial reporting. Each shows the problem, what I designed, the key design decisions and the real screens."
         />
         <ol>
           {caseStudies.map((c, i) => (

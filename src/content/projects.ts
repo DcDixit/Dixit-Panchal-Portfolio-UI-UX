@@ -69,7 +69,7 @@ const S = {
   gcAutomation: shot("gocardless-automation", 1200, 754, "Close-up of the sidebar sync status and the automation checklist toggles"),
   capDashboard: shot("costallocation-dashboard", 1200, 675, "CostAllocation Pro dashboard with payroll by grant, hours against limits and monthly salary expense"),
   capTimeLogs: shot("costallocation-time-logs", 1200, 712, "CostAllocation Pro time log table with filters, inline hours and over-hours flags"),
-  capHandoff: shot("costallocation-handoff", 1200, 290, "Close-up of the organisation selector with its developer comment"),
+  capHandoff: shot("costallocation-handoff", 1200, 207, "Close-up of the organisation selector with its developer comment"),
   cfInflow: shot("cashflow-planned-inflow", 1200, 675, "Planned cash inflow table grouped into past, current and projected months"),
   cfSteppers: shot("cashflow-steppers", 1200, 173, "The two steppers: planning cash flow and preparing the cash flow statement"),
   cfStatement: shot("cashflow-statement", 1200, 694, "Cash flow statement preparation with monthly chart, category tabs and line items"),
@@ -91,20 +91,20 @@ export const caseStudies: CaseStudy[] = [
     seoDescription:
       "Uptra case study by Dixit Panchal: designing job matching, structured resume editing and guided interview preparation for an AI career platform.",
     context:
-      "Uptra is an AI-assisted career platform. Candidates use it to find relevant roles, maintain their resume and prepare for interviews. These are three high-stakes tasks that usually live in separate tools.",
+      "Uptra is an AI-assisted career platform. Candidates use it to find relevant roles, maintain their resume and prepare for interviews. The product brings these three tasks into one workspace.",
     problem:
-      "Job seekers struggled to prioritise roles and prepare with confidence because the information they needed was spread across fragmented tools. Every listing looked equally important, and preparation happened somewhere else entirely.",
+      "Job seekers struggled to prioritise roles and prepare with confidence because the information they needed was spread across fragmented tools.",
     contribution: [
       "Information architecture connecting jobs, resume, profile and interview prep",
       "Job listing and match-score patterns",
       "Structured resume editor",
       "Interview preparation workspace",
-      "High-fidelity UI and prototypes",
+      "High-fidelity UI",
     ],
     decisions: [
       {
         title: "Lead every listing with fit, not just the title",
-        body: "Each job card puts a match score and its two most decision-relevant reasons (compensation and visa sponsorship) next to the role. Role facts sit in a consistent grid, so candidates compare cards by scanning one column at a time. Active filters stay visible as chips, and “Not interested” lets people curate the list instead of scrolling past noise.",
+        body: "Each job card puts a match score and two key reasons (compensation and visa sponsorship) next to the role. Role facts sit in a consistent grid, so candidates compare cards by scanning one column at a time. Active filters stay visible as chips, and “Not interested” lets people curate the list instead of scrolling past noise.",
         shot: S.uptraJobs,
         markers: [
           mk(72.6, 18, "Match score with the two reasons that matter"),
@@ -115,7 +115,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Treat the resume as structured data",
-        body: "Instead of a free-form document, the resume is broken into repeatable, editable blocks: profile summary, skills as chips, experience, education, projects and certificates. Timeline markers make the order of experience obvious, and export and edit actions stay pinned at the top. Structured data is also what lets the platform match candidates to roles.",
+        body: "Instead of a free-form document, the resume is broken into repeatable, editable blocks: profile summary, skills as chips, experience, education, projects and certificates. Timeline markers make the order of experience obvious, and export and edit actions stay pinned at the top.",
         shot: S.uptraResume,
         markers: [
           mk(84, 3.8, "Export and edit pinned at the top"),
@@ -154,7 +154,7 @@ export const caseStudies: CaseStudy[] = [
     context:
       "GoCardless for QuickBooks lets small businesses collect bank payments against their QuickBooks invoices. Two systems need to stay in sync: payments in GoCardless and invoices in QuickBooks.",
     problem:
-      "Small businesses needed to connect payment collection to QuickBooks without complex configuration. Setup involves business verification, payment methods and customer mandates, concepts that are unfamiliar to many first-time users.",
+      "Small businesses needed to connect payment collection to QuickBooks without complex configuration. Setup involves business verification, payment methods and customer mandates, all before the first payment.",
     contribution: [
       "Onboarding flow from account setup to the first payout",
       "Home dashboard for revenue and payment health",
@@ -175,9 +175,9 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Answer questions where they come up",
-        body: "A “Get started” panel sits beside the checklist with a short walkthrough video and the questions businesses actually ask, such as why GoCardless isn’t showing on invoices, or how to talk to customers about bank payments. Help stays in context instead of in a separate help centre.",
+        body: "A “Get started” panel sits beside the checklist with a short walkthrough video and common questions, such as why GoCardless isn’t showing on invoices, or how to talk to customers about bank payments. Help stays in context instead of in a separate help centre.",
         shot: S.gcHelp,
-        markers: [mk(50, 38, "Short walkthrough video"), mk(5, 76, "The questions businesses actually ask")],
+        markers: [mk(50, 38, "Short walkthrough video"), mk(5, 76, "Common questions answered in context")],
       },
       {
         title: "Put exceptions next to revenue",
@@ -220,7 +220,7 @@ export const caseStudies: CaseStudy[] = [
     context:
       "Nonprofits funded by grants must allocate payroll costs to the grants and programmes that fund them. CostAllocation Pro gives finance admins one place to track hours, payroll and allocations across entities.",
     problem:
-      "Finance admins were juggling spreadsheets to track hours, grants and cost allocations across organisations. Reconciliation was manual, and staff going over their hour limits was hard to spot.",
+      "Finance admins were juggling spreadsheets to track hours, grants and cost allocations across organisations. Reconciliation was manual.",
     contribution: [
       "Dashboard information architecture",
       "Time-activity and time-log workflows",
@@ -231,7 +231,7 @@ export const caseStudies: CaseStudy[] = [
     decisions: [
       {
         title: "A dashboard built around admin questions",
-        body: "Four panels answer what admins check most: year-to-date payroll by grant, each employee’s hours against their limit, salary expense by month, and a monthly allocation summary that links straight to the detail. A calm, muted palette keeps attention on the numbers.",
+        body: "Four panels cover the core admin questions: year-to-date payroll by grant, each employee’s hours against their limit, salary expense by month, and a monthly allocation summary that links straight to the detail. A calm, muted palette keeps attention on the numbers.",
         shot: S.capDashboard,
         markers: [
           mk(31.7, 17.5, "Year-to-date payroll by grant"),
@@ -253,9 +253,9 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Annotated for handoff",
-        body: "Screens carry developer notes where behaviour isn’t obvious from the UI. For example, the organisation selector lets admins switch between companies without logging out. Sync status and export options are designed in, not added later.",
+        body: "Screens carry developer notes where behaviour isn’t obvious from the UI. For example, the organisation selector lets admins switch between companies without logging out. Sync status and export options are part of the design.",
         shot: S.capHandoff,
-        markers: [mk(20.5, 59, "Developer note explains the behaviour"), mk(56, 17.6, "Organisation switcher")],
+        markers: [mk(20.5, 82.5, "Developer note explains the behaviour"), mk(56, 24.6, "Organisation switcher")],
       },
     ],
     goal: "Replace spreadsheet reconciliation with an auditable workflow and make grant compliance visible at a glance.",
@@ -275,9 +275,9 @@ export const caseStudies: CaseStudy[] = [
     seoDescription:
       "Cash flow reporting case study by Dixit Panchal: phased tables, stepper-led workflows and chart-and-table pairings for forecasting and cash-flow statements.",
     context:
-      "A financial planning product used by practice owners and their accountants to plan cash inflows and outflows and prepare cash-flow statements. The screens shown use sample data from a dental practice.",
+      "A financial planning product for planning cash inflows and outflows and preparing cash-flow statements. The screens shown use sample data from a dental practice.",
     problem:
-      "Finance teams couldn’t reconcile past, present and projected cash positions in one view. Wide monthly tables made it hard to tell actuals from forecasts, and statement preparation spanned several disconnected steps.",
+      "Finance teams couldn’t reconcile past, present and projected cash positions in one view.",
     contribution: [
       "Table UX for wide, time-based financial data",
       "Planning and statement-preparation workflows",
